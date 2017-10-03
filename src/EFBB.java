@@ -59,8 +59,11 @@ public class EFBB {
 	private static String banco = "BB";  // BB ou CEF
 	
   	static String caminho = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/PDFBB/";
-  	static String excelBB = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/ExcelBB/Arcos1.xlsx";
+  	static String excelBB = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/ExcelBB/Arcos31.07.2017.xlsx";
+  	
+  	static ArrayList<String> arrayPublicoCJExisteUnica = new ArrayList<String> ();
 
+  	static File fo = new File(excelBB);
 
 	public static void main(String[] args) throws IOException {		
 			visualizarArquivos();
@@ -341,12 +344,13 @@ public class EFBB {
 					
 					long contaJudicial = 0;
 					String valotAtualizado = "";
-					String numeroParcela = "";
+					String numeroParcela = "Parcela01";
 					boolean temValorParcela = false;
+					String posicaoEvalor = "";
 					
 					String M = "M1";
-					String L = "M1";
-					String N = "M1";
+					String L = "L1";
+					String N = "N1";
 					
 					ArrayList<String> arrayConteudoExiste = new ArrayList<String> ();
 					ArrayList<String> arrayConteudoNovoComValor = new ArrayList<String> ();
@@ -359,19 +363,27 @@ public class EFBB {
 					ArrayList<String> arrayConteudoCJExisteNaoUnicaIncluirParcela = new ArrayList<String> ();
 					String ConteudoExistenumeroParcela = "";
 			  try {
-				  
-				  //	final Double ratio = 0.009900990099009901;
+
 					ZipSecureFile.setMinInflateRatio(-1.0d);
-					
 		            XSSFWorkbook workbook = new XSSFWorkbook(excelBB);
 		            XSSFSheet sheet = workbook.getSheetAt(0);
-		            
 		            Row row = sheet.getRow(0);  
 		            
 		            getSetBB.setCjExisteUnica(true);
 		            getSetBB.setCjExiste(false);
 		            getSetBB.setCjNova(true);
 		            
+		            CellReference cellReferencePAR = null;
+		            Row rowLPAR = null;
+		            Cell cellLPAR = null;
+		            
+		            CellReference cellReferenceVAL = null;
+		            Row rowLVAL = null;
+		            Cell cellLVAL = null;		           
+		            
+		            CellReference cellReferenceCJ = null;
+		            Row rowLCJ = null;
+		            Cell cellLCJ = null;
 		            
 		            
 
@@ -383,87 +395,49 @@ public class EFBB {
 		            	    	  
 		            	    	  	//LENDO AS COLUNAS N1, N2 , N3  (VALOR ATUALIZADO)
 			            		 N = "N"+i;
-			            		 
-			            		 CellReference cellReferencePAR = null;
 			            		 cellReferencePAR = new CellReference(N);   //Ferencia Coluna M usado na Conta Judicial
-			            	     
-			            		 Row rowLPAR = null;
 			            		 rowLPAR = sheet.getRow(cellReferencePAR.getRow());	 //Ferencia Linha usado na Conta Judicial
-			            	     
-			            	     Cell cellLPAR = null;
 			            	     cellLPAR = rowLPAR.getCell(cellReferencePAR.getCol());
-	              	      
-//			            	     if(cellLPAR != null)
-//			            	     {			            	    	 	
-//			            	    	 	if(cellLPAR.CELL_TYPE_STRING==cellLPAR.getCellType() ) {			            	    	 		
-//			            	    	 		numeroParcela = cellLPAR.getStringCellValue();
-//			            	    	 		//System.out.println("PARCELA VALOR 2:" + numeroParcela);
-//			            	    	 	}
-//			            	     }
-			            	     
-			            	     
-		            	    	  
+
 		            	    	  
 		            	    	  
 		            	    	  	//LENDO AS COLUNAS L1, L2 , L3  (VALOR ATUALIZADO)
 			            		 L = "L"+i;
-			            		 
-			            		 CellReference cellReferenceVAL = null;
 			            		 cellReferenceVAL = new CellReference(L);   //Ferencia Coluna M usado na Conta Judicial
-			            	     
-			            		 Row rowLVAL = null;
 			            		 rowLVAL = sheet.getRow(cellReferenceVAL.getRow());	 //Ferencia Linha usado na Conta Judicial
-			            	     
-			            	     Cell cellLVAL = null;
 			            	     cellLVAL = rowLVAL.getCell(cellReferenceVAL.getCol());
-	              	      
-//			            	     if(cellLVAL.CELL_TYPE_NUMERIC==cellLVAL.getCellType()) {
-//			            	    	 	valotAtualizado = (double) cellLVAL.getNumericCellValue();
-//		                    		System.out.println("VALOR ATUALIZADO COLUNA L:" + valotAtualizado);
-//			            	     }
 
 		            	    	  
 		            	    	  
-		            	    	  
-		            	    	  
 		            	    	  	//LENDO AS COLUNAS M1, M2 , M3  (CONTA JUDICIAL)
-			            		 M = "M"+i;
-			            		 
-			            		 CellReference cellReferenceCJ = null;
+			            		 M = "M"+i;			            		 
 			            		 cellReferenceCJ = new CellReference(M);   //Ferencia Coluna M usado na Conta Judicial
-			            	     
-			            		 Row rowLCJ = null;
 			            		 rowLCJ = sheet.getRow(cellReferenceCJ.getRow());	 //Ferencia Linha usado na Conta Judicial
-			            	     
 			            	     contaJudicial = 0;
 	
-			            	     Cell cellLCJ = null;
-		            	    	     cellLCJ = rowLCJ.getCell(cellReferenceCJ.getCol());
-	              	      
-			            	     if(cellLCJ.CELL_TYPE_NUMERIC==cellLCJ.getCellType()) {
+		            	    	     cellLCJ = rowLCJ.getCell(cellReferenceCJ.getCol());  
+			            	     
+		            	    	     if(cellLCJ.CELL_TYPE_NUMERIC==cellLCJ.getCellType()) {
 		                    		contaJudicial = (long) cellLCJ.getNumericCellValue();
-		                    		//System.out.println("CONTA NUMERICA: |"+contaJudicial+"|"); 
-		                    		
-		                    		contadorPosicao++;
-		                    		getSetBB.setContadorPosicao(contadorPosicao);
-		                    		//System.out.println("NUMERICA ULTIMA POSICAO:" + contadorPosicao);
+			                    	contadorPosicao++;
+			                    	getSetBB.setContadorPosicao(contadorPosicao);
 			            	     }
 			            	     else if(cellLCJ.CELL_TYPE_STRING==cellLCJ.getCellType()) {
 		                    		contaJudicial = Long.parseLong(cellLCJ.getStringCellValue());
-		                    		//System.out.println("CONTA STRING: |"+contaJudicial+"|");
-		                    		
-		                    		contadorPosicao++;
-		                    		getSetBB.setContadorPosicao(contadorPosicao);
-		                    		//System.out.println("STRING ULTIMA POSICAO:" + contadorPosicao);
+			                    	contadorPosicao++;
+			                    	getSetBB.setContadorPosicao(contadorPosicao);
 			            	     }
 		            	    	  
+
+		                    		
+		                    	//System.out.println("contadorPosicao: " + contadorPosicao);
+			            	     
 			            	      
 			            	      if(contaJudicial == Long.parseLong(getSetBB.getContaJuridica())) 
 		                        	{
 			            	    	  		getSetBB.setPosicaoExiste(i);	
 		                        	 	getSetBB.setCjNova(false);
-		                        	 	
-		                        	 	//EscreverExistiNaoUnica();//PINTA AVISANDO QUE NAO E UNICA E DEPOIS SE FOR UNICA ELE ARRUMA FALANDO QUE É
+                  	 	
 		                        	 
 		                        	 	//VOU ADCIONANDO NO ARRAY ROSA QUE EXISTE PRA PINTAR DE UMA UNICA VEZ.
 		                        	 	arrayConteudoCJExisteNaoUnica.add(Integer.toString(getSetBB.getPosicaoExiste()));
@@ -472,11 +446,9 @@ public class EFBB {
 	                        	 		//Guarda o Valor atualizado para futura comparacao
 		   			            	     if(cellLVAL.CELL_TYPE_NUMERIC==cellLVAL.getCellType()) {
 		   			            	    	 	valotAtualizado = String.valueOf(cellLVAL.getNumericCellValue()) ;
-				                    		//System.out.println("VALOR ATUALIZADO COLUNA NYMERO: " + valotAtualizado);
 					            	     }
 		   			            	     if(cellLVAL.CELL_TYPE_STRING==cellLVAL.getCellType()) {
 		   			            	    	 	valotAtualizado =	cellLVAL.getStringCellValue();
-				                    		//System.out.println("VALOR ATUALIZADO COLUNA STRING: " + valotAtualizado);
 					            	     }
 		   			            	     
 		   			            	     //Guardando a Parcela
@@ -484,24 +456,37 @@ public class EFBB {
 					            	     {			            	    	 	
 					            	    	 	if(cellLPAR.CELL_TYPE_STRING==cellLPAR.getCellType() ) {			            	    	 		
 					            	    	 		numeroParcela = cellLPAR.getStringCellValue();
-					            	    	 		//System.out.println("NUMERO PARCELA:" + numeroParcela);
 					            	    	 	}
 					            	     }
 		   			            	     
 		   			            	     //ADIDIONA NESTE ARRAY PARA SABER SE JA EXISTE ANTES DE INCLUIR COM O MESMO VALOR E CONTA JUDICIAL
-		   			            	  arrayConteudoCJExisteNaoUnicaIncluirValor.add(valotAtualizado);
-		   			            	  arrayConteudoCJExisteNaoUnicaIncluirParcela.add(numeroParcela);
+		   			            	  	arrayConteudoCJExisteNaoUnicaIncluirValor.add(valotAtualizado);
+		   			            	  	arrayConteudoCJExisteNaoUnicaIncluirParcela.add(numeroParcela);
 		   			            	     
 		   			            	     
+		                        	 	//ARRAY JA EXISTE POR TUDO NO FINAL
+//		   			            	  	posicaoEvalor = (Integer.toString(getSetBB.getPosicaoExiste()) +"|"+ valotAtualizado).trim();
+//		   			            	  	arrayPublicoCJExisteUnica.add(posicaoEvalor);
+		   			            	  	//System.out.println("_____arrayPublicoCJExisteUnica" + arrayPublicoCJExisteUnica);
 
-		                        	 	
-		                        	 	
-		                        	 	
+		   			            	  	
 		                        	 	//System.out.println(" IGUAL a CONTA: "+ contaJudicial);
 		                        	 		
 		                        	 	if(getSetBB.isCjExiste()) //ver se a conta existe e é unica ou nao
 		                        	 	{
-		                        	 	//	System.out.println("1-  CONTA EXISTE E NAO É UNICA");
+		                        	 	//System.out.println("1-  CONTA EXISTE E NAO É UNICA");
+		                        	 		
+		                        	 		//ARRAY JA EXISTE POR TUDO NO FINAL
+//		                        	 		if(cjExisteUnica) {
+//		                        	 			arrayPublicoCJExisteUnica.remove(getSetBB.getPosicaoExiste());
+//		                        	 			arrayPublicoCJExisteUnica.remove(getSetBB.getPosicaoExiste()-1);
+//		                        	 		}
+//		                        	 		else 
+//		                        	 			arrayPublicoCJExisteUnica.remove(getSetBB.getPosicaoExiste());
+//		                        	 		cjExisteUnica = false;
+		                        	 		
+		                        	 		
+		                        	 		
 		                        	 		
 		                        	 		getSetBB.setCjExisteUnica(false);
 		                        	 		//EscreverExistiNaoUnica();  // PINTA DE ROSA PARA AVIAR QUE TEM DUPLICIDADE E CONFERENCIA
@@ -547,8 +532,6 @@ public class EFBB {
 		            
 		            if(!getSetBB.isCjNova() && getSetBB.isCjExiste() && getSetBB.isCjExisteUnica()) //Se existi é unica
             	 		{
-	            	 		// colocar aqui o array de conta Existe e é unica
-	            	 		
 	            	 		//System.out.println("2-  CONTA EXISTE  É UNICA");
 
 			            	if(!getSetBB.getValorAtualizado().equals("0,00"))// Se conter Valor
@@ -562,9 +545,12 @@ public class EFBB {
 	                	 		EscreverExistiUnicaValorZero();  
 	                	 	}
 			            	
+			          //  	System.out.println("ARRAY POR DE UMA SO VEZ AO ACABAR |" + arrayPublicoCJExisteUnica+"|");
+			            	
+			            	
+			            	
 			            	//PAUSA PARA PODER GRAVAR O EXCEL
 			            	try {  
-			  		       // 	System.out.println(" PAUSA");
 					        Thread.sleep( 100 );  
 					     } 
 		  			     catch (InterruptedException e) {  
@@ -643,7 +629,7 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaComValor() throws IOException {
 			  try{
-				  	File fo = new File(excelBB);
+				  //	File fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -740,7 +726,7 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaValorZero() throws IOException {
 			  try{
-				  	File fo = new File(excelBB);
+				  	//File fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -839,7 +825,7 @@ public class EFBB {
 		  
 		  public static void EscreverContaNovaComValor() throws IOException {
 			  try{
-				  	File fo = new File(excelBB);
+				  	
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
 			        XSSFSheet my_sheet = a.getSheetAt(0);
@@ -981,7 +967,7 @@ public class EFBB {
 		  
 		  public static void EscreverContaNovaValorZero() throws IOException {
 			  try{
-				  	File fo = new File(excelBB);
+				  	//File fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
 			        XSSFSheet my_sheet = a.getSheetAt(0);
@@ -1124,7 +1110,7 @@ public class EFBB {
 			  try{
 				  	String pintaRosa = "";
 				  
-				  	File fo = new File(excelBB);
+				  	//File fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -1221,10 +1207,9 @@ public class EFBB {
 			}
 		  
 		  
-		  
 		  public static void EscreverExistiNaoUnicaNovo() throws IOException {
 			  try{
-				  	File fo = new File(excelBB);
+				  	//File fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
 			        XSSFSheet my_sheet = a.getSheetAt(0);
@@ -1280,7 +1265,7 @@ public class EFBB {
 			        
 			        //Centro Azul Claro
 			        XSSFCellStyle style3 = a.createCellStyle();
-			        style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(245, 122, 213)));
+			        style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(245, 188, 220)));
 			        style3.setAlignment ( XSSFCellStyle.ALIGN_CENTER ) ; 
 			        style3.setFillPattern(CellStyle.SOLID_FOREGROUND);
 			        style3.setBorderBottom(CellStyle.BORDER_THIN);
