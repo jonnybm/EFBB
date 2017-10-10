@@ -176,8 +176,7 @@ public class EFBB {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
 				            		ret = "Parcela "+ ret.substring(ret.length() - 2);  //FAZ SUBSTRING PARA PRIMEIRA PARTE DA CONTA JUDICIAL
-				            		//ret = "Parcela "+ ret.substring(ret.length() - 2);
-				            		//System.out.println("PARCELA:" + ret);
+
 				            				
 				            		//SETANDO A PARCELA
 				            		getSetBB.setParcela(ret);
@@ -368,6 +367,7 @@ public class EFBB {
 					
 					ArrayList<String> arrayConteudoCJExisteNaoUnicaIncluirParcela = new ArrayList<String> ();
 					String ConteudoExistenumeroParcela = "";
+					String parcela = "";
 			 
 					try {
 
@@ -569,11 +569,13 @@ public class EFBB {
 		    			        		
 		    			        		//Pegando Parcela
 		    			        		ConteudoExistenumeroParcela = arrayConteudoCJExisteNaoUnicaIncluirParcela.get(i);
-		    			        		ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.substring(ConteudoExistenumeroParcela.length() - 2).trim()).toUpperCase(); // Pega apenas os dois ultimos Digitos
+		    			        		//ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.substring(ConteudoExistenumeroParcela.length() - 2).trim()).toUpperCase(); // Pega apenas os dois ultimos Digitos
 		    			        		
+		    			        		ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.toUpperCase()).trim();
+		    			        		ConteudoExistenumeroParcela = ConteudoExistenumeroParcela.replace("0", "");
 		    			        		
-		    			        		System.out.println("SUBSTRING PARCELA EXEL     + |" + ConteudoExistenumeroParcela +"|");
-		    			        		System.out.println("SUBSTRING PARCELA  PDF    + |" + getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2)+"|");
+		    			        		parcela = (getSetBB.getParcela().toUpperCase()).trim();
+		    			        		parcela = parcela.replace("0", "");
 		    			        		
 		    			        		//Pegando a posicao e Valor para gravar caso a CJ existe e o numero da parcela tambem for igual
 		    			        		getSetBB.setPosicaoExiste(Integer.parseInt(arrayConteudoCJExisteNaoUnica.get(i)));
@@ -581,18 +583,20 @@ public class EFBB {
 		    			        		System.out.println("                                                           ");
 		    			        		System.out.println("Valor Excell         |" + valotVaiAtualizar+"|");	            	 		
 		    	            	 		System.out.println("Valor PDF            |" + ValorApoio +"|");
-		    	            	 		System.out.println("-----------------------------------------------------------");
-		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela+"|");	            	 		
-		    	            	 		System.out.println("Parcela PDF          |" + getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim() +"|");	    			        		
-		    	            	 		
+		    	            	 		System.out.println("------------------------------------------------------------");
+		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela +"|");	            	 		
+		    	            	 		System.out.println("Parcela PDF          |" + parcela +"|");	    			        		
+
+		    	            	 		System.out.println("                                                           ");
 			            	 		
-		    	            	 		if((valotVaiAtualizar.equals(ValorApoio) || valotVaiAtualizar == ValorApoio) && ConteudoExistenumeroParcela.equals((getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase())   || ConteudoExistenumeroParcela == (getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase()) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
+		    	            	 		
+		    	            	 		if((valotVaiAtualizar.equals(ValorApoio) || valotVaiAtualizar == ValorApoio) && ConteudoExistenumeroParcela.equals(parcela)   || ConteudoExistenumeroParcela == parcela) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
 		    	                	 	{
 		    			            		System.out.println("VAI BARRAR -- VALORES IGUAIS NAO ATUALIZAR");
 		    			            		barrarGravacaoContaJaExiste = true;
 		    			            		break;
 		    	                	 	}
-			    	            	 	else if( ConteudoExistenumeroParcela.equals((getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase())   || ConteudoExistenumeroParcela == (getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase()) // Parcelas Iguais Atualiza Valor da Parcela
+			    	            	 	else if( ConteudoExistenumeroParcela.equals(parcela)   || ConteudoExistenumeroParcela == parcela) // Parcelas Iguais Atualiza Valor da Parcela
 			    	            	 	{
 			    	            	 		//SE ENCONTRAR A MESMA PARCELA
 			    	            	 		//PINTA DE ROSA E ATUALIZA O VALOR
