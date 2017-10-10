@@ -302,4 +302,26 @@ public class GetSetBB {
 		this.contadorPosicao = contadorPosicao;
 	}
 	
+	int  porcentagem = 0;
+
+//-----------------------------
+
+	public int getPorcentagem() {
+		return porcentagem;
+	}
+	public void setPorcentagem(int porcentagem) {
+		this.porcentagem = porcentagem;
+	}
+	
+	String fimArquivo = "";
+
+
+
+	public String getFimArquivo() {
+		return fimArquivo;
+	}
+	public void setFimArquivo(String fimArquivo) {
+		this.fimArquivo = fimArquivo;
+	}
+	
 }

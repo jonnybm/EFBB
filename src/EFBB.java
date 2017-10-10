@@ -56,17 +56,24 @@ import com.sun.xml.internal.ws.util.StringUtils;
 public class EFBB {
 	
 	private static GetSetBB getSetBB = new GetSetBB();
+	private static EficienciaFinanceiraBB EficienciaFinanceiraBB = new EficienciaFinanceiraBB();
 	private static String banco = "BB";  // BB ou CEF
 	
-  	static String caminho = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/PDFBB/";
-  	static String excelBB = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/ExcelBB/Arcos31.07.2017.xlsx";
-  	
+//  	static String caminho = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/PDFBB/";
+//  	static String excelBB = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/ExcelBB/Arcos31.07.2017.xlsx";
+
+  	static String caminho = "";
+  	static String excelBB = "";
+	
+	
   	static ArrayList<String> arrayPublicoCJExisteUnica = new ArrayList<String> ();
 
   	static File fo = new File(excelBB);
 
-	public static void main(String[] args) throws IOException {		
+	//public static void main(String[] args) throws IOException {	
+	public static void init() throws IOException {
 			visualizarArquivos();
+		
             }
 
 	
@@ -107,10 +114,14 @@ public class EFBB {
 				}
 			
 				System.out.println(" LINHA PREENCHIDA ["+i+"]");
-			
+				
+				getSetBB.setPorcentagem((i*100)/afile.length);
+				System.out.println(" STATUS: ["+getSetBB.getPorcentagem()+" %]");
 			}
 			
-			System.out.println(" ---------------- > FINAL EXCEL <------------------");
+			
+			getSetBB.setFimArquivo("FINALIZADO COM SUCESSO");
+			System.out.println("FINALIZADO COM SUCESSO");
 		}
 	
   
@@ -138,10 +149,7 @@ public class EFBB {
 			      }
 			    }
 		  }
-	
-		  
-
-		  
+			  
 		  
 		  //RECEBE O CONTEUDO DO EXCEL PARA TRATAMENTO DAS INFORMACOES
 		  public static String trataPDF(String[] linhas) 
@@ -246,6 +254,8 @@ public class EFBB {
 				        	  		ret = linhas[i-1];
 				        	  	
 				        	  	ret =  trataSujeira(ret);
+				        	  	ret = ret.replace("C","");
+				        	  	ret = ret.replace("c","");
 				        	  	
 				        	  	//SETANDO O VALOR ATUALIZADO
 				        	  	getSetBB.setValorAtualizado(ret.trim());
@@ -258,7 +268,7 @@ public class EFBB {
 		  
 		  public static String trataSujeira(String str) {
 			  
-			//  System.out.println("TRATAR SUJEIRA :"+str);
+			 // System.out.println("TRATAR SUJEIRA :"+str);
 			  
 		        String ret = "";
 		        
@@ -316,15 +326,11 @@ public class EFBB {
 	        		return ret;
 		    }
 		  
-
-
 		  
 		  private static boolean campoNumerico(String campo){           
 		        return campo.matches("[0-9]+");   
 		}
-		
-		  
-		  
+				  
 		  
 		  public static String lerExcel(String str) throws IOException{
 
@@ -392,8 +398,6 @@ public class EFBB {
 						{
 			            	      try 
 			            	      {
-	
-			            	    	  
 			            	    	  	//LENDO AS COLUNAS N1, N2 , N3  (VALOR ATUALIZADO)
 				            		 N = "N"+i;
 				            		 cellReferencePAR = new CellReference(N);   //Ferencia Coluna M usado na Conta Judicial
@@ -429,7 +433,6 @@ public class EFBB {
 				                    	getSetBB.setContadorPosicao(contadorPosicao);
 				            	     }
 			            	    	  
-	
 			                    		
 			                    	//System.out.println("contadorPosicao: " + contadorPosicao);
 				            	     
@@ -524,9 +527,6 @@ public class EFBB {
 		                	 		EscreverExistiUnicaValorZero();  
 		                	 	}
 				            	
-				          //  	System.out.println("ARRAY POR DE UMA SO VEZ AO ACABAR |" + arrayPublicoCJExisteUnica+"|");
-				            	
-				            	
 				            	
 				            	//PAUSA PARA PODER GRAVAR O EXCEL
 				            	try {  
@@ -539,18 +539,20 @@ public class EFBB {
 		            	 	else if(!getSetBB.isCjExisteUnica()) 
 		            	 	{
 		            	 		String Valor = "";
+		            	 		String ValorApoio = "";
 		            	 		String valotVaiAtualizar = "";
 		            	 		
-		            	 		Valor = getSetBB.getValorAtualizado();
-		            	 		Valor = Valor.replace(".", "");
-		            	 		Valor = Valor.replace(",", "");
+		            	 		Valor  = getSetBB.getValorAtualizado();
+		            	 		ValorApoio = getSetBB.getValorAtualizado();
+		            	 		ValorApoio = ValorApoio.replace(".", "");
+		            	 		ValorApoio = ValorApoio.replace(",", "");
 	
 		            	 		
 		            	 		//COLOCO NO BEAN PARA QUANDO SABER AS LINHAS QUE PRECISA PINTAR DE ROSA QUE JA EXISTEM NAS LINHAS PASSADAS - EscreverExistiNaoUnica()
-		            	 		getSetBB.setArrayCJExisteNaoUnica(arrayConteudoCJExisteNaoUnica);
+		            	 		//getSetBB.setArrayCJExisteNaoUnica(arrayConteudoCJExisteNaoUnica);
 		            	 		
 		            	 		//PINTA DE ROSA OS EXISTENTES  --- PINTAR ROS ESCURO sera os que nao conseguiu identificar
-		            	 		EscreverExistiNaoUnica();
+		            	 		//EscreverExistiNaoUnica();
 	
 		            	 		//LIMPA O ARRAY PARA PODER PINTAR OS PROXIOS
 		            	 		//arrayConteudoCJExisteNaoUnica.clear();
@@ -565,36 +567,38 @@ public class EFBB {
 		    			        		valotVaiAtualizar = valotVaiAtualizar.replace(",", "");
 		    			        	
 		    			        		
-		    			        		
 		    			        		//Pegando Parcela
 		    			        		ConteudoExistenumeroParcela = arrayConteudoCJExisteNaoUnicaIncluirParcela.get(i);
+		    			        		ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.substring(ConteudoExistenumeroParcela.length() - 2).trim()).toUpperCase(); // Pega apenas os dois ultimos Digitos
+		    			        		
+		    			        		
+		    			        		System.out.println("SUBSTRING PARCELA EXEL     + |" + ConteudoExistenumeroParcela +"|");
+		    			        		System.out.println("SUBSTRING PARCELA  PDF    + |" + getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2)+"|");
 		    			        		
 		    			        		//Pegando a posicao e Valor para gravar caso a CJ existe e o numero da parcela tambem for igual
 		    			        		getSetBB.setPosicaoExiste(Integer.parseInt(arrayConteudoCJExisteNaoUnica.get(i)));
 		    			        		
-		    			        		
-		    			        		
-		    	            	 		System.out.println("Valor Excell         |" + valotVaiAtualizar+"|");	            	 		
-		    	            	 		System.out.println("Valor PDF          + |" + Valor +"|");
+		    			        		System.out.println("                                                           ");
+		    			        		System.out.println("Valor Excell         |" + valotVaiAtualizar+"|");	            	 		
+		    	            	 		System.out.println("Valor PDF            |" + ValorApoio +"|");
 		    	            	 		System.out.println("-----------------------------------------------------------");
 		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela+"|");	            	 		
-		    	            	 		System.out.println("Parcela PDF        + |" + getSetBB.getParcela() +"|");	    			        		
+		    	            	 		System.out.println("Parcela PDF          |" + getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim() +"|");	    			        		
 		    	            	 		
 			            	 		
-		    	            	 		if((valotVaiAtualizar.equals(Valor) || valotVaiAtualizar == Valor) &&  ConteudoExistenumeroParcela.equals(getSetBB.getParcela()) ) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
+		    	            	 		if((valotVaiAtualizar.equals(ValorApoio) || valotVaiAtualizar == ValorApoio) && ConteudoExistenumeroParcela.equals((getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase())   || ConteudoExistenumeroParcela == (getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase()) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
 		    	                	 	{
 		    			            		System.out.println("VAI BARRAR -- VALORES IGUAIS NAO ATUALIZAR");
 		    			            		barrarGravacaoContaJaExiste = true;
 		    			            		break;
 		    	                	 	}
-			    	            	 	else if(ConteudoExistenumeroParcela.equals(getSetBB.getParcela()) )
+			    	            	 	else if( ConteudoExistenumeroParcela.equals((getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase())   || ConteudoExistenumeroParcela == (getSetBB.getParcela().substring(getSetBB.getParcela().length() - 2).trim()).toUpperCase()) // Parcelas Iguais Atualiza Valor da Parcela
 			    	            	 	{
 			    	            	 		//SE ENCONTRAR A MESMA PARCELA
 			    	            	 		//PINTA DE ROSA E ATUALIZA O VALOR
 			    	            	 		
 			    	            	 		getSetBB.setValorAtualizado(Valor);
-			    	            	 		System.out.println("getSetBB.setValorAtualizado " + getSetBB.getValorAtualizado());
-			    	            	 		
+
 			    	            	 		System.out.println("CONTA IGUAL E PARCELA DIFERENTE-  VAI ATUALIZAR O VALOR");
 			    	            	 		EscreverExistiNaoUnicaComValor();
 			    	            	 		
@@ -608,13 +612,7 @@ public class EFBB {
 			            	 		
 		
 			    			        if( !barrarGravacaoContaJaExiste)
-		        	 				{	
-		        	 					
 			    			        		EscreverExistiNaoUnicaNovo();
-		        	 					
-		        	 					
-		        	 				}		
-		            	 		
 	        	 				
 	        	 				
 		            	 	//PAUSA PARA PODER GRAVAR O EXCEL
@@ -637,7 +635,7 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaComValor() throws IOException {
 			  try{
-				  //	File fo = new File(excelBB);
+				  	fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -715,6 +713,8 @@ public class EFBB {
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(10).setCellStyle(style1);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(13).setCellStyle(style2);
@@ -734,7 +734,7 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaValorZero() throws IOException {
 			  try{
-				  	//File fo = new File(excelBB);
+				  	fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -814,6 +814,8 @@ public class EFBB {
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(10).setCellStyle(style1);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(13).setCellStyle(style2);
@@ -946,10 +948,12 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(10);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellValue(getSetBB.getValorOriginal());
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(11);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(12);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(12).setCellValue(getSetBB.getContaJuridica());
@@ -969,13 +973,14 @@ public class EFBB {
 			        
 		        }catch(Exception e){
 		        		System.out.println("3 -  EscreverContaNovaComValor GRAVAR NA LINHA EROOO");
+		        		System.out.println(" ERRO: " + e);
 		        }
 			}	
 		  		 
 		  
 		  public static void EscreverContaNovaValorZero() throws IOException {
 			  try{
-				  	//File fo = new File(excelBB);
+				  	fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
 			        XSSFSheet my_sheet = a.getSheetAt(0);
@@ -1085,10 +1090,13 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(10);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellValue(getSetBB.getValorOriginal());
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(11);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(12);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(12).setCellValue(getSetBB.getContaJuridica());
@@ -1110,6 +1118,7 @@ public class EFBB {
 			        
 		        }catch(Exception e){
 		        		System.out.println("4-  EscreverContaNovaComValor GRAVAR NA LINHA EROOO");
+		        		System.out.println(" ERRO: " + e);
 		        }
 			}
 		  
@@ -1118,7 +1127,7 @@ public class EFBB {
 			  try{
 				  	String pintaRosa = "";
 				  
-				  	//File fo = new File(excelBB);
+				  	fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -1211,13 +1220,14 @@ public class EFBB {
   
 			        
 		        }catch(Exception e){
+		        		System.out.println("5  ERRO: " + e);
 		        }
 			}
 		  
 		  
 		  public static void EscreverExistiNaoUnicaNovo() throws IOException {
 			  try{
-				  	//File fo = new File(excelBB);
+				  	fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
 			        XSSFSheet my_sheet = a.getSheetAt(0);
@@ -1330,10 +1340,12 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(10);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellValue(getSetBB.getValorOriginal());
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(10).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(11);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).createCell(12);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(12).setCellValue(getSetBB.getContaJuridica());
@@ -1355,13 +1367,14 @@ public class EFBB {
 			        
 		        }catch(Exception e){
 		        		System.out.println("1-  EscreverContaNovaComValor GRAVAR NA LINHA EROOO");
+		        		System.out.println(" ERRO: " + e);
 		        }
 			}	
 		  
 		  
 		  public static void EscreverExistiNaoUnicaComValor() throws IOException {
 			  try{
-				  //	File fo = new File(excelBB);
+				    fo = new File(excelBB);
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        XSSFSheet my_sheet = a.getSheetAt(0);
 			        
@@ -1401,6 +1414,8 @@ public class EFBB {
 
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
+			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 
@@ -1414,6 +1429,7 @@ public class EFBB {
   
 			        
 		        }catch(Exception e){
+		        	System.out.println("6 ERRO: " + e);
 		        }
 			}
 	  
