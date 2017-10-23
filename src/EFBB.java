@@ -67,14 +67,16 @@ public class EFBB {
 	
 	
   	static ArrayList<String> arrayPublicoCJExisteUnica = new ArrayList<String> ();
-
+  	
+  	
   	static File fo = new File(excelBB);
 
 	//public static void main(String[] args) throws IOException {	
 	public static void init() throws IOException {
-			visualizarArquivos();
+		fo = new File(excelBB);
+		visualizarArquivos();
 		
-            }
+	}
 
 	
 	  public static void visualizarArquivos() throws IOException {
@@ -189,37 +191,39 @@ public class EFBB {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
 				            		ret = ret.substring(0, ret.length() -6);  //FAZ SUBSTRING PARA TIRAR A AGENCIA QUE VEM NA MESMA LINHA
-				            		
+				            		ret = ret.replace("A","");
+				            		ret = ret.replace("a","");
 				            		//SETANDO O PROCESSO
 				            		getSetBB.setProcesso(ret);
 				          }
-						  
-						  
-						  if(i == 4) //LINHA 4 PEGA A VARA
+						  						  
+						  if(i == 5) //LINHA 5 PEGA A COMARCA
 				          {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
+				            		ret =  toTitledCase(ret);
+				            		
+				            		
+				            		//SETANDO O AUTOR
+				            		getSetBB.setComarca(ret);
+				          }
+						  if(i == 6) //LINHA 6 PEGA A VARA
+				          {
+				            		ret = linhas[i];
+				            		ret =  trataSujeira(ret);
+				            		
+				            		ret = ret.substring(5, 7);				            		
 				            		ret = ret.trim()+"ª VT";
 				            		
 				            		//SETANDO A VARA
 				            		getSetBB.setVara(ret);
 				          }
 						  
-						  if(i == 5) //LINHA 5 PEGA A COMARCA
-				          {
-				            		ret = linhas[i];
-				            		ret =  trataSujeira(ret);
-				            		
-				            		
-				            		//SETANDO O AUTOR
-				            		getSetBB.setComarca(ret);
-				          }
-						  
-						  
 						  if(i == 7) //LINHA 7 PEGA O RÉU
 				          {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
+				            		ret =  toTitledCase(ret);
 				            		
 				            		//SETANDO O AUTOR
 				            		getSetBB.setReu(ret);
@@ -229,6 +233,8 @@ public class EFBB {
 				          {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
+				            		ret =  toTitledCase(ret);
+				            		
 				            		
 				            		//SETANDO O AUTOR
 				            		getSetBB.setAutor(ret);
@@ -267,7 +273,7 @@ public class EFBB {
 		  
 		  public static String trataSujeira(String str) {
 			  
-			 // System.out.println("TRATAR SUJEIRA :"+str);
+			  //System.out.println("TRATAR SUJEIRA :|"+str+"|");
 			  
 		        String ret = "";
 		        
@@ -317,8 +323,13 @@ public class EFBB {
 	        		ret = ret.replace("Valor do capital inicial              ", "");
 	        		ret = ret.replace("CONTA JUDICIAL", "");
 	        		ret = ret.replace("CONTA JUDICIAL ", "");
+//	        		ret = ret.replace("Orgao          :", "");
+//	        		ret = ret.replace("Orgao", "");
+//	        		ret = ret.replace(" VARA DO TRABALHO", "");
+//	        		ret = ret.replace(" VARA DO TRABALHO ", "");
+//	        		ret = ret.replace("VARA DO TRABALHO", "");
 	        		
-
+	        		
 	        		if (ret.charAt(ret.length() - 1) == 'C') { // verifica se o último caractere é uma C
 	        			ret = ret.replaceAll("C","");
 	        		}
@@ -331,6 +342,39 @@ public class EFBB {
 		}
 				  
 		  
+		 
+		 
+		  
+		  
+		  public static String toTitledCase(String nome){
+			  
+			  //System.out.println("STR ENTRADA= "+ nome);
+			  
+			  nome = " "+nome; 
+			  	
+			  String aux =""; // só é utilizada para facilitar 
+
+		        try{ //Bloco try-catch utilizado pois leitura de string gera a exceção abaixo
+		            for(int i = 0; i < nome.length(); ++i){
+		                if( nome.substring(i, i+1).equals(" ") || nome.substring(i, i+1).equals("  "))
+		                {
+		                    aux += nome.substring(i+1, i+2).toUpperCase();
+		                   // System.out.println("1= "+ aux);
+		                }
+		                else
+		                {
+		                    aux += nome.substring(i+1, i+2).toLowerCase();
+		                    //System.out.println("2= "+ aux);
+		                }
+		        }
+		        }catch(IndexOutOfBoundsException indexOutOfBoundsException){
+		            //não faça nada. só pare tudo e saia do bloco de instrução try-catch
+		        }
+		        nome = aux;
+		       // System.err.println(nome);
+
+			  return nome;
+			}  
 		  
 		  
 		  
@@ -352,7 +396,7 @@ public class EFBB {
 					
 					long contaJudicial = 0;
 					String valotAtualizado = "";
-					String numeroParcela = "Parcela01";
+					String numeroParcela = "";
 					boolean temValorParcela = false;
 					String posicaoEvalor = "";
 					
@@ -842,6 +886,8 @@ public class EFBB {
 		  
 		  public static void EscreverContaNovaComValor() throws IOException {
 			  try{
+				  
+				  
 				  	
 			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
 			        
@@ -972,7 +1018,6 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellStyle(style2);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);
 
-			        
 			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
