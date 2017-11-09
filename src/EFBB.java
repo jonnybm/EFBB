@@ -65,6 +65,7 @@ public class EFBB {
 //  	static String excelBB = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/ExcelBB/Arcos31.07.2017.xlsx";
 
   	static String caminho = "";
+  	static String lixo = "";
   	static String excelBB = "";
 	
 	
@@ -653,7 +654,13 @@ public class EFBB {
 			    	            	 		getSetBB.setValorAtualizado(Valor);
 
 			    	            	 		System.out.println("CONTA IGUAL E PARCELA DIFERENTE-  VAI ATUALIZAR O VALOR");
-			    	            	 		EscreverExistiNaoUnicaComValor();
+			    	            	 		//
+			    	            	 		//se valor novo for zerado nao atualizar apenas pintar se nao continua da forma que esta
+			    	            	 		if(!Valor.equals("0,00") || Valor == "0,00")// Se conter Valor	
+			    	            	 			EscreverExistiNaoUnicaComValor();
+			    	            	 		else
+			    	            	 			EscreverExistiNaoUnicaSemValor();
+			    	            	 		
 			    	            	 		
 			    	            	 		barrarGravacaoContaJaExiste = true;
 			    	            	 		
@@ -842,7 +849,7 @@ public class EFBB {
 			        
 			        //Centro Azul Claro
 			        XSSFCellStyle style3 = a.createCellStyle();
-			        style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(0, 251, 254)));
+			        style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(183, 16, 46)));  // pinta de vermelho apenas
 			        style3.setAlignment ( XSSFCellStyle.ALIGN_CENTER ) ; 
 			        style3.setFillPattern(CellStyle.SOLID_FOREGROUND);
 			        style3.setBorderBottom(CellStyle.BORDER_THIN);
@@ -865,9 +872,9 @@ public class EFBB {
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(8).setCellStyle(style2);
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(9).setCellStyle(data);			        
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(10).setCellStyle(style1);
-			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
-			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
-			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());	 NAO ATUALIZAR MAIS O VALOR APENAS PINTA VERMELHO		        
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -1469,6 +1476,69 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
+			        
+			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
+			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
+
+			        
+			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        a.write(outputStream);
+			        outputStream.close();//Close in finally if possible
+			        outputStream = null;
+
+
+  
+			        
+		        }catch(Exception e){
+		        	System.out.println("6 ERRO: " + e);
+		        }
+			}
+	  
+		  
+		  public static void EscreverExistiNaoUnicaSemValor() throws IOException {
+			  try{
+				    fo = new File(excelBB);
+			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
+			        XSSFSheet my_sheet = a.getSheetAt(0);
+			        
+			        System.out.println("1-  EscreverExistiNaoUnicaComValor GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
+			        
+
+			        //Direita Cor Azul Claro
+			        XSSFCellStyle style1 = a.createCellStyle();
+			        style1.setAlignment ( XSSFCellStyle.ALIGN_RIGHT ) ; 
+
+			        
+			        //Centro Azul Claro
+			        XSSFCellStyle style2 = a.createCellStyle();
+			        style2.setAlignment ( XSSFCellStyle.ALIGN_CENTER ) ; 
+			        
+			        
+			        CreationHelper createHelper = a.getCreationHelper();
+			        XSSFCellStyle data = a.createCellStyle();
+			        data.setAlignment ( XSSFCellStyle.ALIGN_CENTER ) ; 
+			        data.setDataFormat(createHelper.createDataFormat().getFormat("dd/mm/yy"));
+			        
+			        
+			        //Centro Azul Claro
+			        XSSFCellStyle style3 = a.createCellStyle();
+			        style3.setFillForegroundColor(new XSSFColor(new java.awt.Color(183, 16, 46)));
+			        style3.setAlignment ( XSSFCellStyle.ALIGN_CENTER ) ; 
+			        style3.setFillPattern(CellStyle.SOLID_FOREGROUND);
+			        style3.setBorderBottom(CellStyle.BORDER_THIN);
+			        style3.setBottomBorderColor(new XSSFColor(new java.awt.Color(0, 0, 0)));
+			        style3.setBorderLeft(CellStyle.BORDER_THIN);
+			        style3.setLeftBorderColor(new XSSFColor(new java.awt.Color(0, 0, 0)));
+			        style3.setBorderRight(CellStyle.BORDER_THIN);
+			        style3.setRightBorderColor(new XSSFColor(new java.awt.Color(0, 0, 0)));
+			        style3.setBorderTop(CellStyle.BORDER_THIN);
+			        style3.setTopBorderColor(new XSSFColor(new java.awt.Color(0, 0, 0)));
+			       
+
+			        //ZERADA e ja existia apenas pintar de vermelho e nao alterar o valor 
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellValue(getSetBB.getValorAtualizado());			        
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellStyle(style1);
+			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(11).setCellType(XSSFCell.CELL_TYPE_STRING);
 			        
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellStyle(style3);
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);

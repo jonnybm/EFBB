@@ -196,20 +196,6 @@ public class EficienciaFinanceiraBB extends javax.swing.JFrame {
     }
     
     
-//    private void rodarArquivos(String pasta, String pathExcel) {
-//        try {
-//        	
-//        		System.out.println("pathExcel --> "+pathExcel);
-//        		System.out.println("pasta --> "+pasta);
-//        		
-//             EFBB.excelBB = pathExcel;
-//             EFBB.caminho = pasta+"/";
-//             
-//             EFBB.init();
-//        } catch (Exception e) {
-//        }
-//    }
-    
     
     public void rodarArquivos(final String pasta, final String pathExcel) {
 		new Thread() {
@@ -233,16 +219,7 @@ public class EficienciaFinanceiraBB extends javax.swing.JFrame {
 				e.printStackTrace();
 			}
              
-             
-//             jtaArea.setText("" +"ROSA CLARO    = DUPLICADO - R$ ALTERADO"+ "\n"
-//   				  + "ROSA MEDIANO = DUPLICADO - AVERIGUAR \n"
-//   				  + "ROSA ESCURO   = DUPLICADO - PDF NOVO \n"
-//   				  + "\nAZUL CLARO    = EXISTENTE - R$ ZERO \n"
-//   				  + "AZUL ESCURO = EXISTENTE - COM R$ \n"
-//   				  + "\nVERDE CLARO = NOVO - R$ ZERO \n"
-//   				  + "VERDE ESCURO = NOVO - COM R$ \n"
-//   				  + "\nSTATUS: FINALIZADO COM SUCESSO ! \n"
-//            		 );
+
              
          	jtaArea.setContentType("text/html"); 
          	jtaArea.setText("<html></body><center><h2><br><br><font color=#0056ee>FINALIZADO COM SUCESSO!!</font></h2><center></body></html>"); 
