@@ -630,14 +630,14 @@ public class EFBB {
 		    			        		//Pegando a posicao e Valor para gravar caso a CJ existe e o numero da parcela tambem for igual
 		    			        		getSetBB.setPosicaoExiste(Integer.parseInt(arrayConteudoCJExisteNaoUnica.get(i)));
 		    			        		
-		    			        		System.out.println("                                                           ");
-		    			        		System.out.println("Valor Excell         |" + valotVaiAtualizar+"|");	            	 		
-		    	            	 		System.out.println("Valor PDF            |" + ValorApoio +"|");
-		    	            	 		System.out.println("------------------------------------------------------------");
-		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela +"|");	            	 		
-		    	            	 		System.out.println("Parcela PDF          |" + parcela +"|");	    			        		
-
-		    	            	 		System.out.println("                                                           ");
+//		    			        		System.out.println("                                                           ");
+//		    			        		System.out.println("Valor Excell         |" + valotVaiAtualizar+"|");	            	 		
+//		    	            	 		System.out.println("Valor PDF            |" + ValorApoio +"|");
+//		    	            	 		System.out.println("------------------------------------------------------------");
+//		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela +"|");	            	 		
+//		    	            	 		System.out.println("Parcela PDF          |" + parcela +"|");	    			        		
+//
+//		    	            	 		System.out.println("                                                           ");
 			            	 		
 		    	            	 		
 		    	            	 		if((valotVaiAtualizar.equals(ValorApoio) || valotVaiAtualizar == ValorApoio) && ConteudoExistenumeroParcela.equals(parcela)   || ConteudoExistenumeroParcela == parcela) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
