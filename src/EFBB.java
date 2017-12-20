@@ -180,8 +180,26 @@ public class EFBB {
 				          {
 				            		ret = linhas[i];
 				            		ret =  trataSujeira(ret);
-				            		ret = "Parcela "+ ret.substring(ret.length() - 2);  //FAZ SUBSTRING PARA PRIMEIRA PARTE DA CONTA JUDICIAL
+				            		//ret = "Parcela "+ ret.substring(ret.length() - 2);  //FAZ SUBSTRING PARA PRIMEIRA PARTE DA CONTA JUDICIAL
+				            		
+				            		
+				            		//VERIFICANDO SE A APRCELA É MAIOR QUE 99 EXE 101, 103 ... SE SIM PEGAR A CENTENA SE NAO PEGAR A DEZENA 
+				            		String apoioCaracterParcela = ret.substring(ret.length() - 4,ret.length());
+				            		
+//				            		System.out.println(" apoioCaracterParcela ["+apoioCaracterParcela+"]");
+//				            		System.out.println(" apoioCaracterParcela SUBSTRING ["+apoioCaracterParcela.subSequence(0, 1)+"]");
+				            		
+				            		if(apoioCaracterParcela.subSequence(0, 1).equals("0"))
+				            			
+				            			apoioCaracterParcela = ret.substring(ret.length() - 3,ret.length()); 
 
+				            		ret = "Parcela "+ apoioCaracterParcela;  //FAZ SUBSTRING PARA PRIMEIRA PARTE DA CONTA JUDICIAL
+				            		
+				            		
+				            		
+				            		
+				            		//ret = "Parcela "+ ret.substring(ret.length() - 3,ret.length());  //FAZ SUBSTRING PARA PRIMEIRA PARTE DA CONTA JUDICIAL
+				            		
 				            				
 				            		//SETANDO A PARCELA
 				            		getSetBB.setParcela(ret);
@@ -565,17 +583,45 @@ public class EFBB {
 			            if(!getSetBB.isCjNova() && getSetBB.isCjExiste() && getSetBB.isCjExisteUnica()) //Se existi é unica
 	            	 		{
 		            	 		//System.out.println("2-  CONTA EXISTE  É UNICA");
-	
-				            	if(!getSetBB.getValorAtualizado().equals("0,00"))// Se conter Valor
-		                	 	{			                        	 		
-		                	 		//System.out.println("2.1 - VALOR ATUALIZADO: " + getSetBB.getValorAtualizado());
-		                	 		EscreverExistiUnicaComValor();   
-		                	 	}
-		                	 	else
+			            	
+		            		parcela = (getSetBB.getParcela().toUpperCase()).trim();
+		            		numeroParcela = numeroParcela.toUpperCase().trim();
+			            	
+//			        		System.out.println("                                                           ");
+//			        		System.out.println("Parcela Excel        |" + numeroParcela +"|");	            	 		
+//	            	 		System.out.println("Parcela PDF          |" + parcela +"|");	    			        	
+//	            	 		System.out.println("                                                           ");
+
+	            	 		
+		            	 		if(numeroParcela.equals(parcela)   || numeroParcela == parcela) // Contas Juducuas ja sei que sao iguais a pergunra se o valor e diferente
 		                	 	{
-		                	 		//System.out.println("2.2 - VALOR ATUALIZADO ZERADO: " + getSetBB.getValorAtualizado());
-		                	 		EscreverExistiUnicaValorZero();  
+				            		if(!getSetBB.getValorAtualizado().equals("0,00"))// Se conter Valor
+			                	 	{			                        	 		
+			                	 		//System.out.println("2.1 - VALOR ATUALIZADO: " + getSetBB.getValorAtualizado());
+			                	 		EscreverExistiUnicaComValor();   
+			                	 	}
+			                	 	else
+			                	 	{
+			                	 		//System.out.println("2.2 - VALOR ATUALIZADO ZERADO: " + getSetBB.getValorAtualizado());
+			                	 		EscreverExistiUnicaValorZero();  
+			                	 	}
 		                	 	}
+		            	 		else
+		            	 		{
+					            	if(!getSetBB.getValorAtualizado().equals("0,00"))// Se conter Valor
+			                	 	{			                        	 		
+			                	 		//System.out.println("3 - CONTA NAO EXISTE COM VALOR::" + getSetBB.getValorAtualizado());
+			                	 		EscreverContaNovaComValor();
+			                	 	}
+			                	 	else
+			                	 	{
+			                	 		//System.out.println("4 - CONTA NOVA VALOR ZERO:" + getSetBB.getValorAtualizado());
+			                	 		EscreverContaNovaValorZero();
+			                	 	}
+		            	 		
+		            	 		}	
+			            	
+
 				            	
 				            	
 				            	//PAUSA PARA PODER GRAVAR O EXCEL
@@ -622,10 +668,10 @@ public class EFBB {
 		    			        		//ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.substring(ConteudoExistenumeroParcela.length() - 2).trim()).toUpperCase(); // Pega apenas os dois ultimos Digitos
 		    			        		
 		    			        		ConteudoExistenumeroParcela = (ConteudoExistenumeroParcela.toUpperCase()).trim();
-		    			        		ConteudoExistenumeroParcela = ConteudoExistenumeroParcela.replace("0", "");
+		    			        		//ConteudoExistenumeroParcela = ConteudoExistenumeroParcela.replace("0", "");
 		    			        		
 		    			        		parcela = (getSetBB.getParcela().toUpperCase()).trim();
-		    			        		parcela = parcela.replace("0", "");
+		    			        		//parcela = parcela.replace("0", "");
 		    			        		
 		    			        		//Pegando a posicao e Valor para gravar caso a CJ existe e o numero da parcela tambem for igual
 		    			        		getSetBB.setPosicaoExiste(Integer.parseInt(arrayConteudoCJExisteNaoUnica.get(i)));
@@ -635,8 +681,8 @@ public class EFBB {
 //		    	            	 		System.out.println("Valor PDF            |" + ValorApoio +"|");
 //		    	            	 		System.out.println("------------------------------------------------------------");
 //		    	            	 		System.out.println("Parcela Excel        |" + ConteudoExistenumeroParcela +"|");	            	 		
-//		    	            	 		System.out.println("Parcela PDF          |" + parcela +"|");	    			        		
-//
+//		    	            	 		System.out.println("Parcela PDF          |" + parcela +"|");
+//		    	            	 		
 //		    	            	 		System.out.println("                                                           ");
 			            	 		
 		    	            	 		
@@ -653,7 +699,7 @@ public class EFBB {
 			    	            	 		
 			    	            	 		getSetBB.setValorAtualizado(Valor);
 
-			    	            	 		System.out.println("CONTA IGUAL E PARCELA DIFERENTE-  VAI ATUALIZAR O VALOR");
+			    	            	 		System.out.println("CONTA IGUAL E PARCELA IGUAL E VALOR DIFERENTE-  VAI ATUALIZAR O VALOR");
 			    	            	 		//
 			    	            	 		//se valor novo for zerado nao atualizar apenas pintar se nao continua da forma que esta
 			    	            	 		if(!Valor.equals("0,00") || Valor == "0,00")// Se conter Valor	
