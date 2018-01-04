@@ -58,7 +58,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 public class EFBB {
 	
 	private static GetSetBB getSetBB = new GetSetBB();
-	private static EficienciaFinanceiraBB EficienciaFinanceiraBB = new EficienciaFinanceiraBB();
+	private static EficienciaFinanceiraCEF EficienciaFinanceiraCEF = new EficienciaFinanceiraCEF();
 	private static String banco = "BB";  // BB ou CEF
 	
 //  	static String caminho = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/PDFBB/";
@@ -67,6 +67,8 @@ public class EFBB {
   	static String caminho = "";
   	static String lixo = "";
   	static String excelBB = "";
+  	static String ComboMes = "";
+  	static String ComboAno = "";
 	
 	
   	static ArrayList<String> arrayPublicoCJExisteUnica = new ArrayList<String> ();
@@ -741,9 +743,13 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaComValor() throws IOException {
 			  try{
-				  	fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
+			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        System.out.println("1-  EscreverExistiUnicaComValor GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
 			        
@@ -825,7 +831,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(13).setCellStyle(style2);
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        outputStream = null;
@@ -840,9 +847,13 @@ public class EFBB {
 		  
 		  public static void EscreverExistiUnicaValorZero() throws IOException {
 			  try{
-				  	fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
+			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        System.out.println("2 -  EscreverExistiUnicaValorZero GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
 			        
@@ -927,7 +938,8 @@ public class EFBB {
 //			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(13).setCellStyle(style2);
 			        
      
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        
@@ -942,11 +954,13 @@ public class EFBB {
 		  public static void EscreverContaNovaComValor() throws IOException {
 			  try{
 				  
-				  
+				  	XSSFWorkbook a = null; 
 				  	
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
+			         a = new XSSFWorkbook(new FileInputStream(fo));
 			        
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        
 			        System.out.println("3 -  EscreverContaNovaComValor GRAVAR NA LINHA :  " + getSetBB.getContadorPosicao());
@@ -1073,7 +1087,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellStyle(style2);
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);
 
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        outputStream = null;
@@ -1087,10 +1102,13 @@ public class EFBB {
 		  
 		  public static void EscreverContaNovaValorZero() throws IOException {
 			  try{
-				  	fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
 			        
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        
 			        System.out.println("4 -  EscreverContaNovaValorZero GRAVAR NA LINHA :  " + getSetBB.getContadorPosicao());
@@ -1216,7 +1234,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);
 
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        
@@ -1234,9 +1253,13 @@ public class EFBB {
 			  try{
 				  	String pintaRosa = "";
 				  
-				  	fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
+			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        System.out.println("5-  EscreverExistiNaoUnica GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
 			        
@@ -1318,7 +1341,8 @@ public class EFBB {
 			        //my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        
@@ -1334,11 +1358,13 @@ public class EFBB {
 		  
 		  public static void EscreverExistiNaoUnicaNovo() throws IOException {
 			  try{
-				  	fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
 			        
-			        XSSFSheet my_sheet = a.getSheetAt(0);
-			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        System.out.println("6-  EscreverExistiNaoUnicaNovo GRAVAR NA LINHA :  " + getSetBB.getContadorPosicao());
 			        
@@ -1465,7 +1491,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getContadorPosicao()-1).getCell(13).setCellType(XSSFCell.CELL_TYPE_STRING);
 
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        
@@ -1481,9 +1508,13 @@ public class EFBB {
 		  
 		  public static void EscreverExistiNaoUnicaComValor() throws IOException {
 			  try{
-				    fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
+			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
 			        
 			        System.out.println("1-  EscreverExistiNaoUnicaComValor GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
 			        
@@ -1527,7 +1558,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        outputStream = null;
@@ -1543,9 +1575,16 @@ public class EFBB {
 		  
 		  public static void EscreverExistiNaoUnicaSemValor() throws IOException {
 			  try{
-				    fo = new File(excelBB);
-			        XSSFWorkbook a = new XSSFWorkbook(new FileInputStream(fo));
-			        XSSFSheet my_sheet = a.getSheetAt(0);
+				  	XSSFWorkbook a = null; 
+				  	
+			         a = new XSSFWorkbook(new FileInputStream(fo));
+			        
+			         XSSFSheet my_sheet = null;
+			         
+			         my_sheet = a.getSheetAt(0);
+			        
+			        
+			        
 			        
 			        System.out.println("1-  EscreverExistiNaoUnicaComValor GRAVAR NA LINHA :  " + getSetBB.getPosicaoExiste());
 			        
@@ -1590,7 +1629,8 @@ public class EFBB {
 			        my_sheet.getRow(getSetBB.getPosicaoExiste()-1).getCell(12).setCellType(XSSFCell.CELL_TYPE_STRING);
 
 			        
-			        FileOutputStream outputStream = new FileOutputStream(new File(excelBB));
+			        FileOutputStream outputStream  = null;
+			        outputStream = new FileOutputStream(new File(excelBB));
 			        a.write(outputStream);
 			        outputStream.close();//Close in finally if possible
 			        outputStream = null;
