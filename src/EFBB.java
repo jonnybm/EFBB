@@ -58,7 +58,7 @@ import com.sun.xml.internal.ws.util.StringUtils;
 public class EFBB {
 	
 	private static GetSetBB getSetBB = new GetSetBB();
-	private static EficienciaFinanceiraCEF EficienciaFinanceiraCEF = new EficienciaFinanceiraCEF();
+	private static EficienciaFinanceiraBB EficienciaFinanceiraCEF = new EficienciaFinanceiraBB();
 	private static String banco = "BB";  // BB ou CEF
 	
 //  	static String caminho = "/Volumes/HD/BackupJonny/Projetos/EficienciaFinanceira/PDFBB/";
@@ -69,6 +69,7 @@ public class EFBB {
   	static String excelBB = "";
   	static String ComboMes = "";
   	static String ComboAno = "";
+  	static String ComboAdd = "";
 	
 	
   	static ArrayList<String> arrayPublicoCJExisteUnica = new ArrayList<String> ();
@@ -77,18 +78,20 @@ public class EFBB {
   	static File fo = new File(excelBB);
 
 	//public static void main(String[] args) throws IOException {	
-	public static void init() throws IOException {
+	public static void init() throws IOException, InterruptedException {
 		fo = new File(excelBB);
 		visualizarArquivos();
 		
 	}
 
 	
-	  public static void visualizarArquivos() throws IOException {
+	  public static void visualizarArquivos() throws IOException, InterruptedException {
 		  
 
 
-		  	String arquivoPDF = "";	
+		  	String arquivoPDF = "";
+		  	String ret = "";
+		  	String excluidos  = "";
 		  
 		  	File file = new File(caminho);
 			File afile[] = file.listFiles();
@@ -110,13 +113,36 @@ public class EFBB {
 			        					        			
 					//Trata o PDF lendo linha a linha do array
 					//String textoret = trataPDF(linhas);
-					trataPDF(linhas);
+					ret = trataPDF(linhas);
 					
 					 //System.out.println("--> "+textoret);
 										 
 					  if(arquivoPDF.indexOf ("DS_Store") <= 0) //Se arquivo for diferente de arquivo de sistema que nao precisa ser analizado
 					  {
-						  lerExcel("a");
+						  if(!ret.equals("ValorZeroNaoMesDeReferenciaContulta"))
+							{ 
+								lerExcel("a");
+							  
+								getSetBB.setPorcentagem((i*100)/afile.length);
+								System.out.println(" STATUS: ["+getSetBB.getPorcentagem()+" %]");
+							}
+							else
+							{
+								excluidos = caminho+"EXCLUIDOS";
+								
+								//VENDO SE O DIRETORIO EXISTE CASO NAO EXISTA CRIAR
+								diretorio(excluidos);
+								
+								Thread.sleep( 500 ); 
+								
+								excluidos = excluidos+"/"+arquivos.getName();
+								
+								System.out.println(" PDF ORIGINAL: ["+arquivoPDF+"]");
+								System.out.println(" PDF JOGAR: ["+excluidos+"]");
+								
+								arquivos.renameTo(new File(excluidos));
+								
+							}
 					  }
 				}
 			
@@ -167,6 +193,9 @@ public class EFBB {
 				  {
 					  for (int i = 0; i < linhas.length; i++) 
 					  {
+						  
+						 // System.out.println("CONTEUDO :>"+linhas[i] + " ["+i+"]");
+						  
 						  if(i == 2) //LINHA 2 Primeira Parte - PEGA a CONTA JUDICIAL
 				          {
 				            		ret = linhas[i];
@@ -266,11 +295,28 @@ public class EFBB {
 						  
 						  if(i == 9) //LINHA 9 PEGA O VALOR DO DEPOSITO INICIAL
 				          {
-				            	ret = linhas[i];
+				            	
+							//  System.out.println("VALOR DO DEPOSITO :|"+linhas[i]+"|");  
+							ret = linhas[i];
 				            	ret =  trataSujeira(ret);
 				            		
 				            	//SETANDO VALOR DEPOSITO INICIAL
 				            	getSetBB.setValorOriginal(ret);
+				          }
+						  
+						  
+						  if(i == 18) //LINHA 18 PARA PEGAR O MES E O ANO DO EXTRATO
+				          {
+				            	
+							//  System.out.println("VALOR DO DEPOSITO :|"+linhas[i]+"|");  
+							ret = linhas[i];
+
+							
+				            	getSetBB.setDataMesConsulta(ret.substring(3, 5));
+				            	System.out.println("MES DO DEPOSITO :|"+	getSetBB.getDataMesConsulta()+"|");  
+				            	
+				            	getSetBB.setDataAnoConsulta("20"+ret.substring(6, 8));
+				            	System.out.println("ANO DO DEPOSITO :|"+	getSetBB.getDataAnoConsulta()+"|"); 
 				          }
   
 						 
@@ -281,12 +327,30 @@ public class EFBB {
 				        	  	else
 				        	  		ret = linhas[i-1];
 				        	  	
-				        	  	ret =  trataSujeira(ret);
-				        	  	ret = ret.replace("C","");
-				        	  	ret = ret.replace("c","");
 				        	  	
-				        	  	//SETANDO O VALOR ATUALIZADO
-				        	  	getSetBB.setValorAtualizado(ret.trim());
+				        	  	
+	        	  				if(ComboAdd.equals("SIM") || ComboAno == "SIM")
+	        	  				{
+					        	  	ret =  trataSujeira(ret);
+					        	  	ret = ret.replace("C","");
+					        	  	ret = ret.replace("c","");
+					        	  	
+					        	  	//SETANDO O VALOR ATUALIZADO
+					        	  	getSetBB.setValorAtualizado(ret.trim());
+
+	        	  					
+	        	  				}	
+	        	  				else if( getSetBB.getDataMesConsulta().equals(ComboMes) && getSetBB.getDataAnoConsulta().equals(ComboAno))  
+	        	  				{
+					        	  	ret =  trataSujeira(ret);
+					        	  	ret = ret.replace("C","");
+					        	  	ret = ret.replace("c","");
+					        	  	
+					        	  	//SETANDO O VALOR ATUALIZADO
+					        	  	getSetBB.setValorAtualizado(ret.trim());
+	        	  				}
+	        	  				else
+	        	  					ret = "ValorZeroNaoMesDeReferenciaContulta";
 				          }     
 					  }
 				  }	  
@@ -399,7 +463,19 @@ public class EFBB {
 			  return nome;
 			}  
 		  
-		  
+		  public static String diretorio(String caminho) {
+				
+			  File diretorio = new File(caminho); // ajfilho é uma pasta!
+			  if (!diretorio.exists()) {
+			     diretorio.mkdir(); //mkdir() cria somente um diretório, mkdirs() cria diretórios e subdiretórios.
+			  } else {
+			     System.out.println("Diretório já existente");
+			  }
+
+			  
+			  return caminho;
+			  
+		  }
 		  
 		  public static String lerExcel(String str) throws IOException{
 

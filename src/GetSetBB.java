@@ -16,6 +16,23 @@ public class GetSetBB {
 	public String ValorAtualizado = "";
 	public String ContaJuridica = "";
 	public String Parcela = "";
+	public String DataMesConsulta = "";
+	public String DataAnoConsulta = "";
+	
+	
+
+	public String getDataAnoConsulta() {
+		return DataAnoConsulta;
+	}
+	public void setDataAnoConsulta(String dataAnoConsulta) {
+		DataAnoConsulta = dataAnoConsulta;
+	}
+	public String getDataMesConsulta() {
+		return DataMesConsulta;
+	}
+	public void setDataMesConsulta(String dataMesConsulta) {
+		DataMesConsulta = dataMesConsulta;
+	}
 	
 	
 

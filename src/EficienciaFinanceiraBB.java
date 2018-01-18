@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
+public class EficienciaFinanceiraBB extends javax.swing.JFrame {
 	
 	static EFBB EFBB = new EFBB();
 	private static GetSetBB getSetBB = new GetSetBB();
@@ -25,9 +25,10 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
 	
 	String labels[] = { "01 - JANEIRO", "02 - FEVEREIRO", "03 - MARCO", "04 - ABRIL","05 - MAIO", "06 - JUNHO", "07 - JULHO", "08 - AGOSTO","09 - SETEMBRO", "10 - OUTUBRO","11 - NOVEMBRO", "12 - DEZEMBRO" };
 	String labelsAno[] = { "2015","2016","2017", "2018", "2019", "2020","2021", "2022", "2023", "2024","2025", "2026","2027", "2028", "2029", "2030" };
+	String labelsAdd[] = { "GRAVAR TUDO?","SIM","NAO"};	
 	
 
-    public EficienciaFinanceiraCEF() {
+    public EficienciaFinanceiraBB() {
         initComponents();
         setTitle("EFICIENCIA FINANCEIRA BANDO DO BRAZIL");
         
@@ -43,6 +44,11 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
         
 		JComboBox comboBox2 = new JComboBox(labelsAno);
         comboBox1.setMaximumRowCount(20);    	
+        
+		JComboBox comboBox3 = new JComboBox(labelsAdd);
+        comboBox1.setMaximumRowCount(10);
+        
+        
     	
 
         jbtnBotaoExcel = new javax.swing.JButton();
@@ -53,6 +59,14 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
+        
+        
+        comboBox3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	jbtnAnoActionPerformed(evt);
+            }
+        });  
+        
 
         comboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -100,6 +114,7 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         //.addComponent(jbtnBotao1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(comboBox3)
                         .addComponent(comboBox1)
                         .addComponent(comboBox2)
                         .addComponent(jbtnBotaoExcel)
@@ -113,6 +128,7 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                		.addComponent(comboBox3)
                 		.addComponent(comboBox1)
                 		.addComponent(comboBox2)                		
                     .addComponent(jbtnBotaoPDF)
@@ -126,6 +142,14 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
+    
+    private void jbtnAddActionPerformed(java.awt.event.ActionEvent evt) {                                           
+		JComboBox source = (JComboBox) evt.getSource();
+    String item = (String) source.getSelectedItem();
+		Add(item);
+
+}      
+    
     
     private void jbtnAnoActionPerformed(java.awt.event.ActionEvent evt) {                                           
 		JComboBox source = (JComboBox) evt.getSource();
@@ -155,7 +179,7 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
                                               
 
     public static void main(String args[]) {
-        (new EficienciaFinanceiraCEF()).show();
+        (new EficienciaFinanceiraBB()).show();
 	      jtaArea.setText(""
 	    		  +"\n   SIGA O PROCEDIMENTO ABAIXO: \n"
 	    		  +"\n   1 - SELECIONE O EXCEL \n"
@@ -228,14 +252,24 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
                 	path = arquivo.getParent();
                 rodarArquivos(path, nome);
                 
-
-                
-
-                
                 
         } catch (Exception e) {
         }
     }
+    
+    private void Add(String Add) {
+        try {
+        	
+        		System.out.println("ANO BASE COMBO  :>"+ Add);
+        		
+             
+        		EFBB.ComboAdd = Add.trim();	
+
+
+        } catch (Exception e) {
+        }
+    }      
+    
     
     
     private void Ano(String Ano) {
@@ -286,6 +320,9 @@ public class EficienciaFinanceiraCEF extends javax.swing.JFrame {
 				
              } catch (IOException e) 
              {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
