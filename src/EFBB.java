@@ -328,12 +328,22 @@ public class EFBB {
 				        	  		ret = linhas[i-1];
 				        	  	
 				        	  	
+				            	String[] partsVara = null;
+			            	 	partsVara = ret.split(" ");
+			            		
+			            	 	//PEGA O VALOR ULTIMO CONTEUDO
+			            	 	ret = partsVara[partsVara.length-1];
+			            	 	ret = ret.replaceAll("C", "");
+			            	 	ret = ret.replaceAll("c", "");
+			            	 	ret = ret.replaceAll("D", "");
+			            	 	ret = ret.replaceAll("d", "");
+				        	  	
+				        	  	
 				        	  	
 	        	  				if(ComboAdd.equals("SIM") || ComboAno == "SIM")
 	        	  				{
 					        	  	ret =  trataSujeira(ret);
-					        	  	ret = ret.replace("C","");
-					        	  	ret = ret.replace("c","");
+
 					        	  	
 					        	  	//SETANDO O VALOR ATUALIZADO
 					        	  	getSetBB.setValorAtualizado(ret.trim());
